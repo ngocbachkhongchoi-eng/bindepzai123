@@ -1,0 +1,25 @@
+name: Build IPA bindepzai123
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create Dummy IPA Structure
+        run: |
+          mkdir -p Payload/bindepzai123.app
+          echo '<?xml version="1.0" encoding="UTF-8"?><plist version="1.0"><dict><key>CFBundleIdentifier</key><string>com.bindepzai123.app</string><key>CFBundleExecutable</key><string>bindepzai123</string></dict></plist>' > Payload/bindepzai123.app/Info.plist
+          echo 'Mach-O binary file' > Payload/bindepzai123.app/bindepzai123
+          zip -r bindepzai123.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bindepzai123-ipa
+          path: bindepzai123.ipa
